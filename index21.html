@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Year Details</title>
+  <title>Year Details for Male</title>
   <style>
     .bar {
       fill: steelblue;
@@ -102,19 +102,19 @@
       <div id="back-button-container2">
         <a href="#" id="go-to-index3-button" onclick="goToIndex3()">Go to Scatterplot</a>
       </div>
-  <h1>Detail Chart for Year Selected</h1>
+  <h1>Male Detail Chart for Year Selected</h1>
   <div id="year-title"></div>
   <div id="chart-description">
     <p>
-        This chart shows the distribution of suicide cases among different age groups for females and males. Hover over the bars to view the exact values.
+        This chart shows the distribution of suicide cases among different age groups for males. Hover over the bars to view the exact values.
     </p>
     <p>
         Both the main chart and this detailed chart clearly demonstrate a significant imbalance in suicide cases, with males showing a considerably higher number of cases compared to females.
     </p>
     <p>
-        Among all age groups, individuals aged 35 to 54 face the highest number of suicide cases.    </p>
+        Among all age groups, individuals aged 35 to 54 face the highest number of suicide cases. This pattern is most obvious for males compared with females.   </p>
     <p>
-        To go back to the main bar chart, press the "Go Back to Main Chart" Button.
+        To go back to the bar chart for female, press the "Go Back to Female Chart" Button.
     </p>
     <p>
         To discover relationship of suicide cases with GDP and find out the position of current year, press the "Go to Scatterplot" Button.
@@ -251,11 +251,11 @@ yearTitle
     }).catch(error => console.error('Error loading data:', error));
 
     function goToIndex3() {
-      window.location.href = `index3.html?year=${selectedYear}`;
+      window.location.href = `https://yulinggao.github.io/index3.html?year=${selectedYear}`;
     }
 
     function goToIndex2() {
-      window.location.href = `index2.html?year=${selectedYear}`;
+      window.location.href = `https://yulinggao.github.io/index2.html?year=${selectedYear}`;
     }
   </script>
 </body>
