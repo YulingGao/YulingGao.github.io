@@ -231,7 +231,7 @@
             .attr("cx", d => xScale(d.average_gdp_per_capita))
             .attr("cy", d => yScale(d.total_suicides))
             .attr("r", 8)
-            .attr("stroke", "black")
+            .attr("stroke", "red")
             .attr("fill", "none");
       
           svg.selectAll(".specific-text")
@@ -243,7 +243,7 @@
             .attr("y", d => yScale(d.total_suicides) - 12)
             .text(d => customDescriptions[d.year])
             .style("font-size", "12px")
-            .style("fill", "black");
+            .style("fill", "red");
         }).catch(function (error) {
           console.error(error);
         });
