@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Year Details</title>
+  <title>Year Details for Female</title>
   <style>
     .bar {
       fill: steelblue;
@@ -97,27 +97,27 @@
 </head>
 <body>
     <div id="back-button-container">
-        <a href="index.html" id="back-button">Go Back to Main Chart</a>
+        <a href="https://yulinggao.github.io/" id="back-button">Go Back to Main Chart</a>
       </div>
       <div id="back-button-container2">
-        <a href="#" id="go-to-index21-button" onclick="goToIndex21()">Go to Male chart</a>
+        <a href="#" id="go-to-index21-button" onclick="goToIndex21()">Go to Male Chart</a>
       </div>
-  <h1>Detail Chart for Year Selected</h1>
+  <h1>Female Detail Chart for Year Selected</h1>
   <div id="year-title"></div>
   <div id="chart-description">
     <p>
-        This chart shows the distribution of suicide cases among different age groups for females and males. Hover over the bars to view the exact values.
+        This chart shows the distribution of suicide cases among different age groups for females compared with total. Hover over the bars to view the exact values.
     </p>
     <p>
         Both the main chart and this detailed chart clearly demonstrate a significant imbalance in suicide cases, with males showing a considerably higher number of cases compared to females.
     </p>
     <p>
-        Among all age groups, individuals aged 35 to 54 face the highest number of suicide cases.    </p>
+        Among all age groups, individuals aged 35 to 54 face the highest number of suicide cases. However, This pattern is only obvious for male. For female, even though 35-54 is the group with highest suicide rates, the difference with other age groups is not very large.   </p>
     <p>
         To go back to the main bar chart, press the "Go Back to Main Chart" Button.
     </p>
     <p>
-        To discover relationship of suicide cases with GDP and find out the position of current year, press the "Go to Scatterplot" Button.
+        To see the comparison between total and male suicide rates, press the "Go to Male Chart" Button.
     </p>
   </div>
   <div id="chart-container">
@@ -246,12 +246,12 @@ yearTitle
         .attr('x', -height / 2)
         .attr('y', -margin.left + 20)
         .attr('text-anchor', 'middle')
-        .text('Total Suicide Cases');
+        .text('Suicide Cases');
 
     }).catch(error => console.error('Error loading data:', error));
 
     function goToIndex21() {
-      window.location.href = `index21.html?year=${selectedYear}`;
+      window.location.href = `https://yulinggao.github.io/index21.html?year=${selectedYear}`;
     }
   </script>
 </body>
