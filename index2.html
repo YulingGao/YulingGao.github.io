@@ -226,6 +226,42 @@ yearTitle
   .attr('y', d => yScale(d.totalCases))
   .attr('height', d => height - yScale(d.totalCases));
 
+      //////
+  svg.append('g')
+  .attr('class', 'x-axis')
+  .attr('transform', `translate(0, ${height})`)
+  .call(d3.axisBottom(xScale))
+  .selectAll('.tick')
+  .filter(d => d === '35-54 years') 
+  .attr('id', 'highlighted-tick');
+
+  const highlightedTick = svg.select('#highlighted-tick');
+const circleRadius = 31;
+const circleX = xScale('35-54 years') + xScale.bandwidth() / 2;
+const circleY = height + circleRadius -15;
+
+svg.append('circle')
+  .attr('cx', circleX)
+  .attr('cy', circleY)
+  .attr('r', circleRadius)
+  .attr('fill', 'none')
+  .attr('stroke', 'red')
+  .attr('stroke-width', 1);
+
+const descriptionX = circleX + circleRadius + 5;
+const descriptionY = circleY + 25;
+
+svg.append('text')
+  .attr('x', descriptionX)
+  .attr('y', descriptionY)
+  .attr('text-anchor', 'start')
+  .text('This is the age group that has the most suicide cases')
+  .style('font-size', '15px')
+  .style('fill', 'red');
+
+
+  ////////
+
       svg.append('g')
         .attr('class', 'x-axis')
         .attr('transform', `translate(0, ${height})`)
