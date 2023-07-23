@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year Details</title>
+  <style>
+    .bar {
+      fill: steelblue;
+    }
+
+    .female-bar {
+      fill: black;
+    }
+
+    .x-axis text {
+      font-size: 12px;
+      text-anchor: middle;
+    }
+
+    .y-axis text {
+      font-size: 12px;
+    }
+
+    #back-button-container {
+  display: flex;
+  justify-content: left;
+  margin-top: 20px;
+}
+
+#back-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff; 
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+#back-button:hover {
+  background-color: #0056b3; 
+}
+
+#back-button-container2 {
+  display: flex;
+  justify-content: left;
+  margin-top: 20px;
+}
+
+#go-to-index3-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; 
+  color: #fff; 
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+#go-to-index3-button:hover {
+  background-color: #0056b3; 
+}
+
+#tooltip {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 9999;
+    }
+    #legend {
+    display: flex;
+    justify-content: space-between;
+    max-width: 400px;
+    margin-left: 20px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .legend-text {
+    line-height: 20px;
+  }
+  </style>
+</head>
+<body>
+    <div id="back-button-container">
+        <a href="index.html" id="back-button">Go Back to Main Chart</a>
+      </div>
+      <div id="back-button-container2">
+        <a href="#" id="go-to-index3-button" onclick="goToIndex3()">Go to Scatterplot</a>
+      </div>
+  <h1>Detail Chart for Year Selected</h1>
+  <div id="year-title"></div>
+  <div id="chart-description">
+    <p>
+        This chart shows the distribution of suicide cases among different age groups for females and males. Hover over the bars to view the exact values.
+    </p>
+    <p>
+        Both the main chart and this detailed chart clearly demonstrate a significant imbalance in suicide cases, with males showing a considerably higher number of cases compared to females.
+    </p>
+    <p>
+        Among all age groups, individuals aged 35 to 54 face the highest number of suicide cases.    </p>
+    <p>
+        To go back to the main bar chart, press the "Go Back to Main Chart" Button.
+    </p>
+    <p>
+        To discover relationship of suicide cases with GDP and find out the position of current year, press the "Go to Scatterplot" Button.
+    </p>
+  </div>
+  <div id="chart-container">
+  </div>
+  <div id="tooltip"></div>
+  <div id="legend">
+    <div>
+      <div class="legend-color" style="background-color: steelblue;"></div>
+      <div class="legend-text">Male Suicide Cases</div>
+    </div>
+    <div>
+      <div class="legend-color" style="background-color: black;"></div>
+      <div class="legend-text">Female Suicide Cases</div>
+    </div>
+  </div>
+
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedYear = urlParams.get('year');
+
+    const yearTitle = d3.select('#year-title');
+yearTitle
+  .append('h2')
+  .text(`Year: ${selectedYear}`);
+
+    const tooltip = d3.select('#tooltip');
+
+    d3.csv("https://raw.githubusercontent.com/YulingGao/YulingGao.github.io/main/cleaned.csv").then(data => {
+      const filteredData = data.filter(d => d.year === selectedYear);
+
+      const ageGroups = ["5-14 years", "15-24 years", "25-34 years", "35-54 years", "55-74 years", "75+ years"];
+      const genders = ["male", "female"];
+
+      const barChartData = ageGroups.map(ageGroup => {
+        const totalCasesByGender = genders.map(gender => {
+          const totalCases = filteredData.reduce((sum, entry) => {
+            if (entry.age === ageGroup && entry.sex === gender) {
+              return sum + +entry.suicides_no;
+            }
+            return sum;
+          }, 0);
+
+          return { gender, totalCases };
+        });
+
+        return { ageGroup, casesByGender: totalCasesByGender };
+      });
+
+      const width = 1200;
+      const height = 400;
+      const margin = { top: 80, right: 20, bottom: 50, left: 90 };
+
+      const svg = d3.select('#chart-container')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+      const xScale = d3.scaleBand()
+        .domain(ageGroups)
+        .range([0, width])
+        .padding(0.1);
+
+      const yScale = d3.scaleLinear()
+        .domain([0, d3.max(barChartData, d => d3.max(d.casesByGender, dc => dc.totalCases))])
+        .range([height, 0]);
+
+      svg.selectAll('.bar-group')
+        .data(barChartData)
+        .enter()
+        .append('g')
+        .attr('class', 'bar-group')
+        .attr('transform', d => `translate(${xScale(d.ageGroup)}, 0)`)
+        .selectAll('rect')
+        .data(d => d.casesByGender)
+        .enter()
+        .append('rect')
+        .attr('class', d => `bar ${d.gender}-bar`)
+        .attr('x', d => xScale.bandwidth() / 4 * (d.gender === 'female' ? 2 : 0))
+        .attr('y', height)
+        .attr('width', xScale.bandwidth() / 2)
+        .attr('height', 0)
+        .attr('fill', d => (d.gender === 'female' ? 'black' : 'steelblue'))
+        .on('mouseover', function (event, d) {
+      tooltip
+        .html(`Suicide Cases: ${event.totalCases}`)
+        .style('opacity', 1)
+        .style('left', d3.event.pageX + 'px')
+        .style('top', d3.event.pageY - 40 + 'px'); 
+    })
+    .on('mouseout', function () {
+        tooltip
+        .style('opacity', 0);
+    })
+        .transition() 
+        .delay((d, i) => i * 150) 
+        .duration(700) 
+        .attr('y', d => yScale(d.totalCases))
+        .attr('height', d => height - yScale(d.totalCases));
+
+      svg.append('g')
+        .attr('class', 'x-axis')
+        .attr('transform', `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale));
+
+      svg.append('g')
+        .attr('class', 'y-axis')
+        .call(d3.axisLeft(yScale));
+
+      svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom - 10)
+        .attr('text-anchor', 'middle')
+        .text('Age Group');
+
+      svg.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('x', -height / 2)
+        .attr('y', -margin.left + 20)
+        .attr('text-anchor', 'middle')
+        .text('Total Suicide Cases');
+
+    }).catch(error => console.error('Error loading data:', error));
+
+    function goToIndex3() {
+      window.location.href = `index3.html?year=${selectedYear}`;
+    }
+  </script>
+</body>
+</html>
